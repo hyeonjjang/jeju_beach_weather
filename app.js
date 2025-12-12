@@ -26,11 +26,39 @@ let kmaBeachList = null;
 
 async function fetchJsonViaProxy(apiUrl) {
   const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(apiUrl)}`;
-  const res = await fetch(proxyUrl);
-  if (!res.ok) {
-    throw new Error(`Proxy fetch failed: ${res.status} ${res.statusText}`);
+  let res;
+  try {
+    res = await fetch(proxyUrl);
+  } catch (err) {
+    appendApiLog(`프록시 요청 실패 (네트워크): ${err && err.message ? err.message : err}`);
+    throw new Error(`Proxy fetch failed (network): ${err && err.message ? err.message : err}`);
   }
-  return res.json();
+
+  const contentType = res.headers.get("content-type") || "";
+  const bodyText = await res.text();
+  const snippet = bodyText.slice(0, 500);
+  const trimmed = bodyText.trimStart();
+  const isJson =
+    contentType.toLowerCase().includes("json") || trimmed.startsWith("{") || trimmed.startsWith("[");
+
+  if (!res.ok) {
+    appendApiLog(`프록시 오류 ${res.status}: ${snippet}`);
+    throw new Error(`Proxy fetch failed: ${res.status} ${res.statusText} | body: ${snippet}`);
+  }
+
+  if (isJson) {
+    try {
+      return JSON.parse(bodyText);
+    } catch (err) {
+      appendApiLog(`JSON 파싱 실패: ${err && err.message ? err.message : err} | body: ${snippet}`);
+      throw new Error(`JSON parse failed: ${err && err.message ? err.message : err}`);
+    }
+  }
+
+  appendApiLog(
+    `JSON 파싱 불가: content-type=${contentType || "unknown"}, body[0..500]=${snippet}`
+  );
+  throw new Error(`Non-JSON response from proxy: content-type=${contentType || "unknown"}`);
 }
 
 async function fetchCoordinatesFromVWorld(address) {
