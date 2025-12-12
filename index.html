@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>제주 해수욕장 실시간 날씨 보기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Pretendard:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <header class="top">
+    <div class="title-group">
+      <p class="eyebrow">JEJU BEACH WEATHER</p>
+      <h1>제주 해수욕장 실시간 날씨 보기</h1>
+      <p class="subtitle">V-world 주소좌표 · 기상청 단기예보 · OceanInfoService 파고/수온</p>
+    </div>
+    <div class="legend">
+      <span>수영 위험도</span>
+      <div class="chips">
+        <span class="chip chip-1">1 아주 좋음</span>
+        <span class="chip chip-2">2 좋음</span>
+        <span class="chip chip-3">3 주의</span>
+        <span class="chip chip-4">4 위험</span>
+        <span class="chip chip-5">5 매우 위험</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls">
+      <div id="region-buttons" class="pill-group region-buttons">
+        <button class="pill region-btn" data-region="제주시">제주시</button>
+        <button class="cctv-btn" data-type="north">CCTV</button>
+        <button class="pill region-btn" data-region="서귀포시">서귀포시</button>
+        <button class="cctv-btn" data-type="south">CCTV</button>
+      </div>
+      <div id="beach-grid" class="beach-grid beach-buttons"></div>
+    </section>
+
+    <section class="status-bar">
+      <div class="status-left">
+        <span class="status-dot" id="status-dot"></span>
+        <p id="status-text">해수욕장을 선택하면 실시간 정보를 불러옵니다.</p>
+      </div>
+      <div class="loader" id="loader"></div>
+    </section>
+
+    <section class="cards" id="cards">
+      <div id="weather-top-row" class="weather-cards-row-top"></div>
+      <div id="weather-bottom-row" class="weather-cards-row-bottom"></div>
+    </section>
+
+    <section class="api-debug-section">
+      <h2 class="section-title">API 상태 / 디버그</h2>
+      <p class="api-debug-description">
+        아래 버튼을 눌러 V-world, 기상청 단기예보, OceanInfoService API 연결 상태를 테스트합니다.
+      </p>
+      <button id="api-test-button" class="api-test-button">API 연결 테스트</button>
+
+      <div class="api-status-list">
+        <div class="api-status-item">
+          <span class="api-name">V-world</span>
+          <span id="status-vworld" class="api-status">대기 중</span>
+        </div>
+        <div class="api-status-item">
+          <span class="api-name">기상청 단기예보</span>
+          <span id="status-kma" class="api-status">대기 중</span>
+        </div>
+        <div class="api-status-item">
+          <span class="api-name">기상청 해수욕장 날씨</span>
+          <span id="status-ocean" class="api-status">대기 중</span>
+        </div>
+      </div>
+
+      <pre id="api-debug-log" class="api-debug-log">(최근 API 로그가 여기에 표시됩니다)</pre>
+    </section>
+  </main>
+
+  <script src="beaches-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
