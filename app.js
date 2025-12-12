@@ -2,7 +2,6 @@
 const VWORLD_KEY = "D1D59BC9-DC45-34F9-A83C-20322886531A";
 const KMA_KEY = "cdb64aec25afc08c33bab533618778169abbb08ec707b766c86c924e3b9c821b";
 const OCEAN_KEY = "jF8ovdxhZM4qHCWyT0pv7w=="; // 현재 미사용, 해수욕장 날씨 API로 대체
-const PROXY_BASE_URL = "http://localhost:4000/proxy?url=";
 const KMA_BEACH_BASE_URL = "https://apis.data.go.kr";
 const KMA_BEACH_LIST_PATH = "/1360000/BeachInfoService/getBeachCodeList";
 const KMA_BEACH_WEATHER_PATH = "/1360000/BeachInfoService/getBeachWeather";
@@ -25,9 +24,8 @@ let selectedRegion = "제주시";
 let selectedBeach = null;
 let kmaBeachList = null;
 
-async function fetchJsonViaProxy(targetUrl) {
-  const encoded = encodeURIComponent(targetUrl);
-  const proxyUrl = `${PROXY_BASE_URL}${encoded}`;
+async function fetchJsonViaProxy(apiUrl) {
+  const proxyUrl = `/.netlify/functions/proxy?url=${encodeURIComponent(apiUrl)}`;
   const res = await fetch(proxyUrl);
   if (!res.ok) {
     throw new Error(`Proxy fetch failed: ${res.status} ${res.statusText}`);
