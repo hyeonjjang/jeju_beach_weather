@@ -1,6 +1,18 @@
 export async function handler(event) {
   try {
-    const target = event.queryStringParameters.url;
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "*",
+          "Access-Control-Allow-Methods": "GET,OPTIONS"
+        },
+        body: ""
+      };
+    }
+
+    const target = event.queryStringParameters && event.queryStringParameters.url;
     if (!target) {
       return {
         statusCode: 400,
